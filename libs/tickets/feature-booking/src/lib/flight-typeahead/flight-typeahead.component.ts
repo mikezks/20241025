@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, timer } from 'rxjs';
 
 @Component({
@@ -11,18 +12,13 @@ import { Subscription, timer } from 'rxjs';
 })
 export class FlightTypeaheadComponent {
   destroyRef = inject(DestroyRef);
-  timer$ = timer(0, 2_000);
-  subscription = new Subscription();
+  timer$ = timer(0, 2_000).pipe(
+    takeUntilDestroyed()
+  );
 
   constructor() {
-    this.subscription.add(
-      this.timer$.subscribe({
-        next: value => console.log(value)
-      })
-    );
-
-    this.destroyRef.onDestroy(
-      () => this.subscription.unsubscribe()
-    );
+    this.timer$.subscribe({
+      next: value => console.log(value)
+    });
   }
 }
