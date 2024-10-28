@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject, takeUntil, timer } from 'rxjs';
+import { share, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'tickets-flight-typeahead',
@@ -12,16 +12,15 @@ import { Subject, takeUntil, timer } from 'rxjs';
 })
 export class FlightTypeaheadComponent {
   destroyRef = inject(DestroyRef);
-  destroyTrigger$ = new Subject<void>();
   timer$ = timer(0, 2_000).pipe(
-    takeUntil(this.destroyTrigger$)
+    tap(value => console.log('Producing value', value)),
+    takeUntilDestroyed(),
+    share()
   );
 
   constructor() {
     this.timer$.subscribe({
-      next: value => console.log(value)
+      next: value => console.log('Callback value', value)
     });
-
-    setTimeout(() => this.destroyTrigger$.next(undefined), 5_000);
   }
 }
