@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 
 @Component({
@@ -9,7 +9,8 @@ import { Subscription, timer } from 'rxjs';
   templateUrl: './flight-typeahead.component.html',
   styleUrl: './flight-typeahead.component.css',
 })
-export class FlightTypeaheadComponent implements OnDestroy {
+export class FlightTypeaheadComponent {
+  destroyRef = inject(DestroyRef);
   timer$ = timer(0, 2_000);
   subscription = new Subscription();
 
@@ -19,9 +20,9 @@ export class FlightTypeaheadComponent implements OnDestroy {
         next: value => console.log(value)
       })
     );
-  }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroyRef.onDestroy(
+      () => this.subscription.unsubscribe()
+    );
   }
 }
