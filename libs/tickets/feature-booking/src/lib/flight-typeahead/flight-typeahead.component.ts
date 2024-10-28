@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription, timer } from 'rxjs';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'tickets-flight-typeahead',
@@ -12,12 +12,15 @@ import { Subscription, timer } from 'rxjs';
 })
 export class FlightTypeaheadComponent {
   destroyRef = inject(DestroyRef);
-  timer$ = timer(0, 2_000).pipe(
-    takeUntilDestroyed()
-  );
 
   constructor() {
-    this.timer$.subscribe({
+    setTimeout(() => this.initMyStream(), 1_000);
+  }
+
+  initMyStream(): void {
+    timer(0, 2_000).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: value => console.log(value)
     });
   }
