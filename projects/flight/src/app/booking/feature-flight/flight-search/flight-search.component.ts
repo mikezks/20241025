@@ -34,7 +34,34 @@ export class FlightSearchComponent {
   protected flights$ = this.ticketsFacade.flights$;
 
   constructor() {
-    effect(() => console.log(this.route()), { allowSignalWrites: true });
+    effect(() => console.log(this.route()));
+
+    console.log(this.filter().from);
+    this.filter.update(value => ({ ...value, from: 'Paris' }));
+    console.log(this.filter().from);
+    this.filter.update(value => ({ ...value, from: 'Madrid' }));
+    console.log(this.filter().from);
+    this.filter.update(value => ({ ...value, from: 'Rome' }));
+    console.log(this.filter().from);
+    this.filter.update(value => ({ ...value, from: 'Athens' }));
+    console.log(this.filter().from);
+    this.filter.update(value => ({ ...value, from: 'Bucuresti' }));
+    console.log(this.filter().from);
+
+
+    const counter = signal(0);
+    const isEven = computed(() => counter() % 2 === 0);
+    // RxJS
+    // counter: 0 -> 1
+    // counter: 1
+    // is Even: true
+    // is Even: false
+
+    // Signals
+    // counter: 0 -> 1
+    // counter: 1
+    // is Even: false
+    // -> Glitch-free behavior
   }
 
   protected search(filter: FlightFilter): void {
