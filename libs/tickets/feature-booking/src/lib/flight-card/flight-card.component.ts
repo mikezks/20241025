@@ -5,6 +5,8 @@ import {
   inject,
   Input,
   NgZone,
+  OnDestroy,
+  OnInit,
   Output,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,7 +23,7 @@ import { initFlight } from '@flight-demo/tickets/domain';
   templateUrl: './flight-card.component.html',
   styleUrls: ['./flight-card.component.css'],
 })
-export class FlightCardComponent {
+export class FlightCardComponent implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   private element = inject(ElementRef);
   private zone = inject(NgZone);
@@ -29,6 +31,10 @@ export class FlightCardComponent {
   @Input() item = initFlight;
   @Input() selected = false;
   @Output() selectedChange = new EventEmitter<boolean>();
+
+  ngOnInit(): void {
+    console.log('Flight Card INIT', this.item.id);
+  }
 
   select() {
     this.selected = true;
@@ -57,5 +63,9 @@ export class FlightCardComponent {
     });
 
     return null;
+  }
+
+  ngOnDestroy(): void {
+    console.log('Flight Card DESTROY', this.item.id);
   }
 }
