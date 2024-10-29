@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
@@ -34,34 +34,14 @@ export class FlightSearchComponent {
   protected flights$ = this.ticketsFacade.flights$;
 
   constructor() {
-    effect(() => console.log(this.route()));
+    effect(() => {
+      const route = this.route();
+      untracked(() => this.logRoute(route));
+    });
+  }
 
-    console.log(this.filter().from);
-    this.filter.update(value => ({ ...value, from: 'Paris' }));
-    console.log(this.filter().from);
-    this.filter.update(value => ({ ...value, from: 'Madrid' }));
-    console.log(this.filter().from);
-    this.filter.update(value => ({ ...value, from: 'Rome' }));
-    console.log(this.filter().from);
-    this.filter.update(value => ({ ...value, from: 'Athens' }));
-    console.log(this.filter().from);
-    this.filter.update(value => ({ ...value, from: 'Bucuresti' }));
-    console.log(this.filter().from);
-
-
-    const counter = signal(0);
-    const isEven = computed(() => counter() % 2 === 0);
-    // RxJS
-    // counter: 0 -> 1
-    // counter: 1
-    // is Even: true
-    // is Even: false
-
-    // Signals
-    // counter: 0 -> 1
-    // counter: 1
-    // is Even: false
-    // -> Glitch-free behavior
+  private logRoute(route: string): void {
+    console.log(route);
   }
 
   protected search(filter: FlightFilter): void {
