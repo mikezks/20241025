@@ -18,6 +18,7 @@ import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
 })
 export class FlightSearchComponent {
   private ticketsFacade = injectTicketsFacade();
+  // private injector = inject(Injector);
 
   protected filter = signal({
     from: 'London',
@@ -45,6 +46,11 @@ export class FlightSearchComponent {
   }
 
   protected search(filter: FlightFilter): void {
+    /* effect(() => {
+      const route = this.route();
+      untracked(() => this.logRoute(route));
+    }, { injector: this.injector }); */
+
     this.filter.set(filter);
 
     if (!this.filter().from || !this.filter().to) {
