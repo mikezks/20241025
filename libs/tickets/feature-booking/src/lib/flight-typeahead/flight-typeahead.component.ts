@@ -31,12 +31,12 @@ export class FlightTypeaheadComponent {
       debounceTime(300),
       distinctUntilChanged(),
       // Filtering END
-      // Side-Effect: Loading Statev
+      // Side-Effect: Loading State
       tap(() => this.loading = true),
       /**
        * Stream 2: API Backend call based on the city filter
        *  - State/Data Provider
-       */
+      */
       switchMap(city => this.flightService.find(city, '')),
       // Side-Effect: Loading State
       tap(() => this.loading = false),
