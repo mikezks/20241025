@@ -3,6 +3,7 @@ import { Component, computed, effect, inject, Injector, signal, untracked } from
 import { FormsModule } from '@angular/forms';
 import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
+import { SIGNAL } from '@angular/core/primitives/signals';
 
 
 @Component({
@@ -35,10 +36,14 @@ export class FlightSearchComponent {
   protected flights = this.ticketsFacade.flights;
 
   constructor() {
-    /* effect(() => {
+    // let activeConsumer = routeLoggingEffect; // ReactiveNode | null
+
+    effect(() => {
       const route = this.route();
       untracked(() => this.logRoute(route));
-    }); */
+    });
+
+    // console.log(this.route[SIGNAL]);
   }
 
   private logRoute(route: string): void {
