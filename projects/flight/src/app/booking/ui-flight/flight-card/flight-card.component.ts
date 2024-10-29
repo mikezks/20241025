@@ -1,5 +1,5 @@
 import { DatePipe, NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, input, Input, model, output, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, EventEmitter, input, Input, model, output, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { injectCdBlink } from '../../../shared/util-cd-visualizer';
 import { Flight } from '../../logic-flight';
@@ -52,8 +52,12 @@ export class FlightCardComponent {
   blink = injectCdBlink();
 
   item = input.required<Flight>();
+  itemChange = output<Flight>();
   selected = model(false);
-  delayTrigger = output<Flight>();
+
+  constructor() {
+    effect(() => console.log(this.item()));
+  }
 
   toggleSelection(): void {
     this.selected.update(currentValue => !currentValue);
@@ -61,6 +65,6 @@ export class FlightCardComponent {
   }
 
   delay(): void {
-    this.delayTrigger.emit(this.item());
+    this.itemChange.emit(this.item());
   }
 }
