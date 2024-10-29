@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, Injector, signal, untracked } from '@angular/core';
+import { Component, computed, effect, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
-import { SIGNAL } from '@angular/core/primitives/signals';
 
 
 @Component({
@@ -36,14 +35,10 @@ export class FlightSearchComponent {
   protected flights = this.ticketsFacade.flights;
 
   constructor() {
-    // let activeConsumer = routeLoggingEffect; // ReactiveNode | null
-
     effect(() => {
       const route = this.route();
       untracked(() => this.logRoute(route));
     });
-
-    // console.log(this.route[SIGNAL]);
   }
 
   private logRoute(route: string): void {
@@ -51,13 +46,6 @@ export class FlightSearchComponent {
   }
 
   protected search(filter: FlightFilter): void {
-    /* const effectRef = effect(() => {
-      const route = this.route();
-      untracked(() => this.logRoute(route));
-    }, { injector: this.injector });
-
-    setTimeout(() => effectRef.destroy(), 2_000); */
-
     this.filter.set(filter);
 
     if (!this.filter().from || !this.filter().to) {
