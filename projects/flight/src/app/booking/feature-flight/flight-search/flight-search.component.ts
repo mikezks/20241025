@@ -20,8 +20,8 @@ export class FlightSearchComponent {
   private ticketsFacade = injectTicketsFacade();
 
   protected filter = signal({
-    from: 'London',
-    to: 'New York',
+    from: 'Hamburg',
+    to: 'Graz',
     urgent: false
   });
   protected route = computed(
