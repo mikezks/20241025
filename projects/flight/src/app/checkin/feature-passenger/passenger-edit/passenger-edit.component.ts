@@ -6,6 +6,7 @@ import { validatePassengerStatus } from '../../util-validation';
 import { initialPassenger } from '../../logic-passenger';
 import { PassengerService } from '../../logic-passenger/data-access/passenger.service';
 import { switchMap } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
 
 
 @Component({
@@ -13,12 +14,15 @@ import { switchMap } from 'rxjs';
   standalone: true,
   imports: [
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './passenger-edit.component.html'
 })
 export class PassengerEditComponent {
   private passengerService = inject(PassengerService);
+  private router = inject(Router);
+
   protected editForm = inject(NonNullableFormBuilder).group({
     id: [0],
     firstName: [''],
@@ -30,14 +34,17 @@ export class PassengerEditComponent {
   });
 
   id = input<number, string>(0, { transform: numberAttribute });
-  passenger = toSignal(
-    toObservable(this.id).pipe(
-      switchMap(id => this.passengerService.findById(id))
-    ), { initialValue: initialPassenger }
-  );
+  passengerResource = this.passengerService.findByIdAsResource(this.id);
+
+
 
   constructor() {
-    effect(() => this.editForm.patchValue(this.passenger()));
+    effect(() => {
+      const passenger = this.passengerResource.value()
+      if (passenger) {
+        this.editForm.patchValue(passenger);
+      }
+    });
   }
 
   protected save(): void {
