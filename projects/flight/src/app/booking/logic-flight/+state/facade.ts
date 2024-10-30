@@ -1,21 +1,19 @@
-import { inject } from "@angular/core"
-import { Store } from "@ngrx/store"
-import { ticketActions } from "./actions";
-import { ticketFeature } from "./reducer";
-import { FlightFilter } from "../model/flight-filter";
+import { inject } from "@angular/core";
 import { Flight } from "../model/flight";
+import { FlightFilter } from "../model/flight-filter";
+import { TicketStore } from "./ticket.store";
 
 
 export function injectTicketsFacade() {
-  const store = inject(Store);
+  const store = inject(TicketStore);
 
   return {
-    flights: store.selectSignal(ticketFeature.selectFlights),
-    search: (filter: FlightFilter) =>
-      store.dispatch(ticketActions.flightsLoad(filter)),
-    update: (flight: Flight) =>
-      store.dispatch(ticketActions.flightUpdate({ flight })),
-    reset: () =>
-      store.dispatch(ticketActions.flightsClear())
+    flights: store.flights,
+    search: (filter: FlightFilter) => {
+      store.updateFilter(filter);
+      store.loadFlights();
+    },
+    update: (flight: Flight) => {},
+    reset: () => store.resetFlights()
   };
 }
