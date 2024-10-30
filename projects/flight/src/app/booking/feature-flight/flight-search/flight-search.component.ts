@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, signal, untracked } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
@@ -18,11 +18,12 @@ import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
 })
 export class FlightSearchComponent {
   private ticketsFacade = injectTicketsFacade();
+  private cdRef = inject(ChangeDetectorRef);
   // private injector = inject(Injector);
 
   protected filter = signal({
-    from: 'London',
-    to: 'New York',
+    from: 'Hamburg',
+    to: 'Graz',
     urgent: false
   });
   protected route = computed(
@@ -39,6 +40,11 @@ export class FlightSearchComponent {
       const route = this.route();
       untracked(() => this.logRoute(route));
     });
+
+    setTimeout(() => {
+      this.basket[4] = true;
+      this.cdRef.markForCheck();
+    }, 5_000);
   }
 
   private logRoute(route: string): void {

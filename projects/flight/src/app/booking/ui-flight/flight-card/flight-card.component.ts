@@ -45,7 +45,7 @@ import { Flight } from '../../logic-flight';
       </div>
     </div>
 
-    <!-- {{ blink() }} -->
+    {{ blink() }}
   `
 })
 export class FlightCardComponent {
